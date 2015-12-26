@@ -11,10 +11,8 @@
         }
     ],
     "require": {
-        "cakephp/cakephp": "~3.0",
-        "league/flysystem": "^1.0",
-        "league/glide": "dev-master",
-        "php": ">=5.4"
+        "cakephp/cakephp": "^3.0",
+        "league/glide": "^1.0"
     },
     "require-dev": {
         "mockery/mockery": "^0.9",
