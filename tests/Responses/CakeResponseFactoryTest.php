@@ -2,8 +2,11 @@
 
 namespace League\Glide\Responses;
 
+use Cake\Network\Request;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
+
+date_default_timezone_set('UTC');
 
 class CakeResponseFactoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -21,15 +24,25 @@ class CakeResponseFactoryTest extends \PHPUnit_Framework_TestCase
             new Local(dirname(__DIR__))
         );
 
-        $factory = new CakeResponseFactory();
+        $factory = new CakeResponseFactory($this->getServerRequestMock());
         $response = $factory->create($cache, 'kayaks.jpg');
-
-        $headers = $response->header();
 
         $this->assertInstanceOf('Cake\Network\Response', $response);
         $this->assertEquals('image/jpeg', $response->type());
-        $this->assertEquals('5175', $response->length());
-        $this->assertContains(gmdate('D, d M Y H:i', strtotime('+1 years')), $response->expires());
-        $this->assertEquals('max-age=31536000, public', $headers['Cache-Control']);
+        $this->assertEquals('5175', $response->getHeaderLine('Content-Length'));
+        $this->assertContains(gmdate('D, d M Y H:i', strtotime('+1 years')), $response->getHeaderLine('Expires'));
+        $this->assertEquals('max-age=31536000, public', $response->getHeaderLine('Cache-Control'));
+
+
+        $this->assertNotEmpty($response->getHeaderLine('Last-Modified'));
+
+    }
+
+    protected function getServerRequestMock()
+    {
+        $mock = $this->getMockBuilder(Request::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        return $mock;
     }
 }
