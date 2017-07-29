@@ -2,16 +2,15 @@
 
 namespace League\Glide\Responses;
 
-use Cake\Chronos\Chronos;
-use Cake\Http\ServerRequest;
-use Cake\Http\Response;
+use Cake\Network\Request;
+use Cake\Network\Response;
 use League\Flysystem\FilesystemInterface;
 
 class CakeResponseFactory implements ResponseFactoryInterface
 {
     protected $request;
 
-    public function __construct(ServerRequest $request = null)
+    public function __construct(Request $request = null)
     {
         $this->request = $request;
     }

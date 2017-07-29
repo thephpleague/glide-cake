@@ -2,8 +2,7 @@
 
 namespace League\Glide\Responses;
 
-use Cake\Http\ServerRequest;
-use Cake\Http\ServerRequestFactory;
+use Cake\Network\Request;
 use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
 
@@ -41,7 +40,7 @@ class CakeResponseFactoryTest extends \PHPUnit_Framework_TestCase
 
     protected function getServerRequestMock()
     {
-        $mock = $this->getMockBuilder(ServerRequest::class)
+        $mock = $this->getMockBuilder(Request::class)
             ->disableOriginalConstructor()
             ->getMock();
         return $mock;
