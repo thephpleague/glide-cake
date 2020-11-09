@@ -2,16 +2,19 @@
 
 namespace League\Glide\Responses;
 
-use Cake\Network\Response;
+use Cake\Http\Response;
 use League\Flysystem\FilesystemInterface;
 
 class CakeResponseFactory implements ResponseFactoryInterface
 {
     /**
      * Create the response.
-     * @param  FilesystemInterface $cache The cache file system.
-     * @param  string              $path  The cached file path.
+     *
+     * @param  FilesystemInterface  $cache  The cache file system.
+     * @param  string  $path  The cached file path.
+     *
      * @return Response            The response object.
+     * @throws \League\Flysystem\FileNotFoundException
      */
     public function create(FilesystemInterface $cache, $path)
     {

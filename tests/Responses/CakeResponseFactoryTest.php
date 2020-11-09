@@ -22,14 +22,13 @@ class CakeResponseFactoryTest extends \PHPUnit_Framework_TestCase
         );
 
         $factory = new CakeResponseFactory();
+        /** @var \Cake\Http\Response $response */
         $response = $factory->create($cache, 'kayaks.jpg');
-
-        $headers = $response->header();
 
         $this->assertInstanceOf('Cake\Network\Response', $response);
         $this->assertEquals('image/jpeg', $response->type());
-        $this->assertEquals('5175', $response->length());
-        $this->assertContains(gmdate('D, d M Y H:i', strtotime('+1 years')), $response->expires());
-        $this->assertEquals('max-age=31536000, public', $headers['Cache-Control']);
+        $this->assertEquals('5175', $response->getHeaderLine('Content-Length'));
+        $this->assertContains(gmdate('D, d M Y H:i', strtotime('+1 years')), $response->getHeaderLine('Expires'));
+        $this->assertEquals('max-age=31536000, public', $response->getHeaderLine('Cache-Control'));
     }
 }
