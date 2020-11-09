@@ -2,7 +2,6 @@
 
 namespace League\Glide\Responses;
 
-use Cake\Http\Response;
 use League\Flysystem\FilesystemInterface;
 
 class CakeResponseFactory implements ResponseFactoryInterface
@@ -13,7 +12,7 @@ class CakeResponseFactory implements ResponseFactoryInterface
      * @param  FilesystemInterface  $cache  The cache file system.
      * @param  string  $path  The cached file path.
      *
-     * @return Response            The response object.
+     * @return \Cake\Http\Response|\Cake\Network\Response            The response object.
      * @throws \League\Flysystem\FileNotFoundException
      */
     public function create(FilesystemInterface $cache, $path)
@@ -25,7 +24,11 @@ class CakeResponseFactory implements ResponseFactoryInterface
         $cacheControl = 'max-age=31536000, public';
         $expires = date_create('+1 years')->format('D, d M Y H:i:s').' GMT';
 
-        $response = new Response();
+        if (class_exists('\Cake\Network\Response')) {
+            $response = new \Cake\Network\Response();
+        } else {
+            $response = new \Cake\Http\Response();
+        }
         $response->type($contentType);
         $response->header('Content-Length', $contentLength);
         $response->header('Cache-Control', $cacheControl);

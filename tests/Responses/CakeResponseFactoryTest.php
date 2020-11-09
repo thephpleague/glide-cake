@@ -22,7 +22,7 @@ class CakeResponseFactoryTest extends \PHPUnit_Framework_TestCase
         );
 
         $factory = new CakeResponseFactory();
-        /** @var \Cake\Http\Response $response */
+        /** @var \Cake\Http\Response|\Cake\Network\Response $response */
         $response = $factory->create($cache, 'kayaks.jpg');
 
         $this->assertInstanceOf('Cake\Network\Response', $response);
