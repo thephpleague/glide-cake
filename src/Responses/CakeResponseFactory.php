@@ -2,6 +2,8 @@
 
 namespace League\Glide\Responses;
 
+use Cake\Http\Response;
+use Laminas\Diactoros\CallbackStream;
 use League\Flysystem\FilesystemInterface;
 
 class CakeResponseFactory implements ResponseFactoryInterface
@@ -24,21 +26,16 @@ class CakeResponseFactory implements ResponseFactoryInterface
         $cacheControl = 'max-age=31536000, public';
         $expires = date_create('+1 years')->format('D, d M Y H:i:s').' GMT';
 
-        if (class_exists('\Cake\Network\Response')) {
-            $response = new \Cake\Network\Response();
-        } else {
-            $response = new \Cake\Http\Response();
-        }
-        $response->type($contentType);
-        $response->header('Content-Length', $contentLength);
-        $response->header('Cache-Control', $cacheControl);
-        $response->header('Expires', $expires);
-        $response->body(function () use ($stream) {
-            rewind($stream);
-            fpassthru($stream);
-            fclose($stream);
-        });
+        $response = new Response();
 
-        return $response;
+        return $response->withType($contentType)
+            ->withLength($contentLength)
+            ->withAddedHeader('Cache-Control', $cacheControl)
+            ->withExpires($expires)
+            ->withBody(new CallbackStream(function () use ($stream) {
+                rewind($stream);
+                fpassthru($stream);
+                fclose($stream);
+            }));
     }
 }
