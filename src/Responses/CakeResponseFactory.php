@@ -2,8 +2,10 @@
 
 namespace League\Glide\Responses;
 
-use Cake\Network\Response;
+use Cake\Http\Response;
+use GuzzleHttp\Psr7\Utils;
 use League\Flysystem\FilesystemOperator;
+use function GuzzleHttp\Psr7\stream_for;
 
 class CakeResponseFactory implements ResponseFactoryInterface
 {
@@ -23,15 +25,18 @@ class CakeResponseFactory implements ResponseFactoryInterface
         $expires = date_create('+1 years')->format('D, d M Y H:i:s').' GMT';
 
         $response = new Response();
-        $response->type($contentType);
-        $response->header('Content-Length', $contentLength);
-        $response->header('Cache-Control', $cacheControl);
-        $response->header('Expires', $expires);
-        $response->body(function () use ($stream) {
-            rewind($stream);
-            fpassthru($stream);
-            fclose($stream);
-        });
+        $response = $response
+            ->withType($contentType)
+            ->withHeader('Content-Length', $contentLength)
+            ->withHeader('Cache-Control', $cacheControl)
+            ->withHeader('Expires', $expires)
+            ->withBody(Utils::streamFor(
+                function () use ($stream) {
+                    rewind($stream);
+                    fpassthru($stream);
+                    fclose($stream);
+                }
+            ));
 
         return $response;
     }

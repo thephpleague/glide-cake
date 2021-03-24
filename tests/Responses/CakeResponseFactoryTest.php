@@ -1,15 +1,17 @@
 <?php
 
-namespace League\Glide\Responses;
+namespace Responses;
 
-use League\Flysystem\Adapter\Local;
 use League\Flysystem\Filesystem;
+use League\Flysystem\Local\LocalFilesystemAdapter;
+use League\Glide\Responses\CakeResponseFactory;
+use PHPUnit\Framework\TestCase;
 
-class CakeResponseFactoryTest extends \PHPUnit_Framework_TestCase
+class CakeResponseFactoryTest extends TestCase
 {
     public function testCreateInstance()
     {
-        $this->assertInstanceOf(
+        self::assertInstanceOf(
             'League\Glide\Responses\CakeResponseFactory',
             new CakeResponseFactory()
         );
@@ -18,18 +20,18 @@ class CakeResponseFactoryTest extends \PHPUnit_Framework_TestCase
     public function testCreate()
     {
         $cache = new Filesystem(
-            new Local(dirname(__DIR__))
+            new LocalFilesystemAdapter(dirname(__DIR__))
         );
 
         $factory = new CakeResponseFactory();
         $response = $factory->create($cache, 'kayaks.jpg');
 
-        $headers = $response->header();
+        $headers = $response->getHeaders();
 
-        $this->assertInstanceOf('Cake\Network\Response', $response);
-        $this->assertEquals('image/jpeg', $response->type());
-        $this->assertEquals('5175', $response->length());
-        $this->assertContains(gmdate('D, d M Y H:i', strtotime('+1 years')), $response->expires());
-        $this->assertEquals('max-age=31536000, public', $headers['Cache-Control']);
+        self::assertInstanceOf('Cake\Network\Response', $response);
+        self::assertEquals('image/jpeg', $response->getType());
+        self::assertEquals('5175', $headers['Content-Length'][0]);
+        self::assertStringContainsString(gmdate('D, d M Y H:i', strtotime('+1 years')), $headers['Expires'][0]);
+        self::assertEquals('max-age=31536000, public', $headers['Cache-Control'][0]);
     }
 }
