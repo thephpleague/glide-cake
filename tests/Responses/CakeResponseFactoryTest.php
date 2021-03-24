@@ -28,7 +28,7 @@ class CakeResponseFactoryTest extends TestCase
 
         $headers = $response->getHeaders();
 
-        self::assertInstanceOf('Cake\Network\Response', $response);
+        self::assertInstanceOf('Cake\Http\Response', $response);
         self::assertEquals('image/jpeg', $response->getType());
         self::assertEquals('5175', $headers['Content-Length'][0]);
         self::assertStringContainsString(gmdate('D, d M Y H:i', strtotime('+1 years')), $headers['Expires'][0]);

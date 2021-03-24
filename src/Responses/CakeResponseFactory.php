@@ -5,7 +5,6 @@ namespace League\Glide\Responses;
 use Cake\Http\Response;
 use GuzzleHttp\Psr7\Utils;
 use League\Flysystem\FilesystemOperator;
-use function GuzzleHttp\Psr7\stream_for;
 
 class CakeResponseFactory implements ResponseFactoryInterface
 {

@@ -11,7 +11,7 @@
         }
     ],
     "require": {
-        "cakephp/cakephp": "^3.0",
+        "cakephp/cakephp": "^3.4|^4.2",
         "league/glide": "^2.0"
     },
     "require-dev": {
